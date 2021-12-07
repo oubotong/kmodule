@@ -5,6 +5,7 @@
 #include <linux/cdev.h>
 #include <linux/pid.h>
 #include <linux/sched.h>
+#include <linux/slab.h>
 #include <linux/fs.h>
 #include <asm/pgtable.h>
 #include <linux/ioctl.h>
@@ -13,7 +14,7 @@ MODULE_AUTHOR("Botong OU");
 MODULE_DESCRIPTION("SEVMON protection invocation Linux Module.");
 MODULE_VERSION("0.01");
 
-#define KE_DATA_VAR _IOWR('k', 1, int *)
+#define KE_DATA_VAR _IOWR('k', 1, struct Info *)
 extern void kmodule_call_into_secmon(int pid);
 
 dev_t dev = 0;
@@ -26,6 +27,10 @@ struct task_struct *p_task;
 struct mm_struct *p_mm;
 struct vm_area_struct *p_vma;
 struct vm_area_struct *p_vma_next;
+struct Info {
+	int pid;
+	unsigned long va;
+};
 
 
 static unsigned long vaddr2paddr(unsigned long vaddr)
@@ -112,15 +117,13 @@ static int kprotect(void){
 }
 
 static long ke_ioctl(struct file *f, unsigned int cmd, unsigned long arg){
+    struct Info *obj=kmalloc(sizeof(struct Info), GFP_KERNEL);
     switch (cmd){
         case KE_DATA_VAR:
-          if (get_user(pid, (int *)arg)){
+          if (copy_from_user(obj, (void *)arg, sizeof(struct Info))){
             return -EACCES;
           }
-          if(find_get_pid(pid)!=NULL){
-            kprotect();
-          }
-          //kmodule_call_into_secmon(pid);
+          printk("VA:%ld\n", obj->va);
           break;
         default:
           return -EINVAL;
