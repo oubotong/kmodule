@@ -1,0 +1,1 @@
+cmd_/home/botong/sev-mintcb/kmodule/pprotect.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/botong/sev-mintcb/kmodule/pprotect.ko /home/botong/sev-mintcb/kmodule/pprotect.o /home/botong/sev-mintcb/kmodule/pprotect.mod.o;  true
