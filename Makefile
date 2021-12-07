@@ -1,3 +1,4 @@
+CONFIG_MODULE_SIG=n
 obj-m += pprotect.o
 all:
 	make -C /home/botong/sev-mintcb/linux-sev-mintcb M=$(PWD) modules
