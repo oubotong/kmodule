@@ -123,7 +123,12 @@ static long ke_ioctl(struct file *f, unsigned int cmd, unsigned long arg){
           if (copy_from_user(obj, (void *)arg, sizeof(struct Info))){
             return -EACCES;
           }
-          printk("VA:%ld\n", obj->va);
+          pid=obj->pid;
+          p_pid_struct = find_get_pid(pid);
+          p_task = pid_task(p_pid_struct, PIDTYPE_PID);
+          p_mm=p_task->active_mm;
+          p_vma=p_mm->mmap;
+          vaddr2paddr(obj->va);
           break;
         default:
           return -EINVAL;
