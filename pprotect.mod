@@ -1,2 +1,2 @@
-/home/botong/sev-mintcb/kmodule/pprotect.o
+/home/botong/kmodule/pprotect.o
 

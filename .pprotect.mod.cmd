@@ -1,1 +1,1 @@
-cmd_/home/botong/sev-mintcb/kmodule/pprotect.mod := { echo  /home/botong/sev-mintcb/kmodule/pprotect.o; echo; } > /home/botong/sev-mintcb/kmodule/pprotect.mod
+cmd_/home/botong/kmodule/pprotect.mod := { echo  /home/botong/kmodule/pprotect.o; echo; } > /home/botong/kmodule/pprotect.mod
