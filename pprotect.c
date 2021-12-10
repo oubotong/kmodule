@@ -15,10 +15,11 @@ MODULE_DESCRIPTION("SEVMON protection invocation Linux Module.");
 MODULE_VERSION("0.01");
 
 #define KE_DATA_VAR _IOWR('k', 1, struct Info *)
-extern void kmodule_call_into_secmon(int pid);
+extern void kmodule_call_into_secmon(int pid, unsigned long va, unsigned long pa);
 
 dev_t dev = 0;
 static int pid;
+static unsigned long paddr=0;
 static struct class *dev_class;
 static struct cdev etx_cdev;
 
@@ -39,8 +40,7 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     p4d_t *p4d;
     pud_t *pud;
     pmd_t *pmd;
-    pte_t *pte;
-    unsigned long paddr = 0;
+    pte_t *pte;;
     unsigned long page_addr = 0;
     unsigned long page_offset = 0;
 
@@ -129,6 +129,8 @@ static long ke_ioctl(struct file *f, unsigned int cmd, unsigned long arg){
           p_mm=p_task->active_mm;
           p_vma=p_mm->mmap;
           vaddr2paddr(obj->va);
+          kmodule_call_into_secmon(pid,obj->va, paddr);
+          paddr = 0;
           break;
         default:
           return -EINVAL;
